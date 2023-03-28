@@ -1,0 +1,29 @@
+path:
+  tesseract:
+    tessdataDir: C:\Program Files\Tesseract-OCR\tessdata
+  uploadsDir: E:\Microservices\Keycloak_Spring_Boot_OAuth2.0\uploads\
+
+server:
+  port: 8021
+
+spring:
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: localhost
+          defaultBrokerPort: 9092
+          autoCreateTopics: false
+        bindings:
+          textExtraction-in-0:
+            consumer:
+              enable-dlq: true
+              dlq-name: json.cool_translator.file.extracted.error
+      bindings:
+        textExtraction-in-0:
+          consumer:
+            max-attempts: 0
+          destination: json.cool_translator.file.prepared
+          group: extractorGroup
+        textExtraction-out-0:
+          destination: json.cool_translator.file.extracted
